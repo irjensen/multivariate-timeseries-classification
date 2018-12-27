@@ -43,17 +43,17 @@ def cnn1d(input_data, out_dim, is_train=True):
     with tf.variable_scope('network', reuse=not is_train):
         input_data = [tf.expand_dims(data, axis=-1) for data in input_data]
         
-        h1 = [conv1d(data, 64) for data in input_data]
+        h1 = [conv1d(data, 32) for data in input_data]
         h1 = [tf.layers.max_pooling1d(inputs=layer, pool_size=2, strides=1) for layer in h1]
         
-        h2 = [conv1d(layer, 128) for layer in h1]
+        h2 = [conv1d(layer, 64) for layer in h1]
         h2 = [tf.layers.max_pooling1d(inputs=layer, pool_size=2, strides=1) for layer in h2]
         
-        h3 = [conv1d(layer, 256) for layer in h2]
+        h3 = [conv1d(layer, 128) for layer in h2]
         h3 = [tf.layers.max_pooling1d(inputs=layer, pool_size=2, strides=1) for layer in h3]
         
-        h4 = [conv1d(layer, 512) for layer in h3]
-        h4 = [tf.layers.max_pooling1d(inputs=layer, pool_size=2, strides=1) for layer in h4]
+        h4 = [conv1d(layer, 256) for layer in h3]
+        h4 = [tf.math.reduce_mean(layer, axis=[1]) for layer in h4]
         
         logits = [tf.contrib.layers.flatten(inputs=layer) for layer in h4]
         logits = tf.concat(logits, axis = -1)
